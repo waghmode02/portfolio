@@ -1,41 +1,18 @@
-import React from "react";
-import api from "../assets/portfolio/api.png";
+import React, { useState, useEffect } from "react";
 
 const Project = () => {
-  const project = [
-    {
-      id: 1,
-      src: api,
-      link: "https://todo-app-mu-weld.vercel.app/",
-      repo: 'https://github.com/waghmode02/todoApp'
-    },
-    {
-      id: 1,
-      src: api,
-      link: "https://todo-app-mu-weld.vercel.app/",
-      repo: 'https://github.com/waghmode02/todoApp'
-    },{
-      id: 1,
-      src: api,
-      link: "https://todo-app-mu-weld.vercel.app/",
-      repo: 'https://github.com/waghmode02/todoApp'
-    },{
-      id: 1,
-      src: api,
-      link: "https://todo-app-mu-weld.vercel.app/",
-      repo: 'https://github.com/waghmode02/todoApp'
-    },{
-      id: 1,
-      src: api,
-      link: "https://todo-app-mu-weld.vercel.app/",
-      repo: 'https://github.com/waghmode02/todoApp'
-    },{
-      id: 1,
-      src: api,
-      link: "https://todo-app-mu-weld.vercel.app/",
-      repo: 'https://github.com/waghmode02/todoApp'
-    },
-  ];
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    fetch("https://portfolio-adminn.onrender.com/api/getproject")
+      .then((response) => response.json())
+      .then((data) => {
+        setProjects(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching projects:", error);
+      });
+  }, []); 
 
   return (
     <div
@@ -45,28 +22,31 @@ const Project = () => {
       <div className="max-w-screen-lg p-4 mx-auto flex flex-col justify-center w-full h-full">
         <div className="pb-8">
           <p className="text-4xl font-bold inline border-b-4 border-gray-500">
-          Recent Top <strong>Works </strong>
+            Recent Top <strong>Works</strong>
           </p>
           <p className="py-6">Here are a few projects I've worked on recently.</p>
         </div>
 
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8 px-12 sm:px-0">
-          {project.map(({ id, src, link, repo }) => (
+          {projects.map(({ id, imagePath, description, demoPath, githubPath }) => (
             <div key={id} className="shadow-md shadow-gray-600 rounded-lg">
               <img
-                src={src}
+                src={imagePath}
                 alt="projects"
                 className="rounded-md duration-200 hover:scale-105 w-full h-auto p-2"
               />
-              <p className="text-xl ml-1 p-2">
-              TodoApp is a simple web application for managing your daily tasks 
-              </p>
+              <p className="text-xl ml-1 p-2">{description}</p>
               <div className="flex items-center justify-center">
-          
-                <button className="w-1/2 px-6 py-3 m-4 duration-200 hover:scale-105" onClick={ () => window.open(link, '_blank')}>
+                <button
+                  className="w-1/2 px-6 py-3 m-4 duration-200 hover:scale-105"
+                  onClick={() => window.open(demoPath, "_blank")}
+                >
                   Demo
                 </button>
-                <button className="w-1/2 px-6 py-3 m-4 duration-200 hover:scale-105" onClick={ () => window.open(repo, '_blank')}>
+                <button
+                  className="w-1/2 px-6 py-3 m-4 duration-200 hover:scale-105"
+                  onClick={() => window.open(githubPath, "_blank")}
+                >
                   GitHub
                 </button>
               </div>

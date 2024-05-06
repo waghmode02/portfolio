@@ -1,13 +1,62 @@
-import React from "react";
-
-//function for form reset
-function handleSubmit(e){
-  setTimeout(() => {
-    e.target.reset();
-  }, 3000);
-}
+import React, { useState } from "react";
 
 const Contact = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [toastMsg, setToastMsg] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  // Function to handle form submission
+  function handleSubmit(e) {
+    e.preventDefault(); // Prevent default form submission behavior
+
+    // Set loading state to true
+    setIsLoading(true);
+
+    // Get form data
+    const formData = new FormData(e.target);
+
+    // Convert form data to JSON
+    const jsonData = {};
+    formData.forEach((value, key) => {
+      jsonData[key] = value;
+    });
+
+    // Send form data to the API endpoint
+    fetch("https://portfolio-adminn.onrender.com/api/addcontact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(jsonData),
+    })
+      .then((response) => {
+        if (response.ok) {
+          console.log("Form submitted successfully");
+          // Show success toast message
+          setToastMsg("Message sent successfully!");
+          setIsSuccess(true);
+          // Reset the form after successful submission
+          setTimeout(() => {
+            e.target.reset();
+            setToastMsg("");
+            setIsSuccess(false);
+          }, 3000);
+        } else {
+          throw new Error("Failed to submit form");
+        }
+      })
+      .catch((error) => {
+        console.error("Error submitting form:", error);
+        // Show error toast message
+        setToastMsg("Failed to send message. Please try again.");
+        setIsSuccess(false);
+      })
+      .finally(() => {
+        // Set loading state to false after submission
+        setIsLoading(false);
+      });
+  }
+
   return (
     <div
       name="contact"
@@ -18,7 +67,7 @@ const Contact = () => {
           <p className="text-4xl font-bold inline border-b-4 border-gray-500">
             Contact
           </p>
-          <p className="py-6">Submit the form below to get in touch with me</p>
+          <p className="py-8 text-xl mt-5">🚀 If you're interested in hiring me, I'm always open to new opportunities and exciting projects! Feel free to reach out for any inquiries or questions regarding web development. Let's create something exceptional together! 🌟</p>
         </div>
         
         <div className=" flex justify-center items-center">
@@ -26,7 +75,6 @@ const Contact = () => {
             onSubmit={handleSubmit}
             name="contact"
             method="POST"
-            action="https://getform.io/f/a5bbeab4-3505-457e-bcda-603c8bc15711"
             className=" flex flex-col w-full md:w-1/2"
           >
             <input
@@ -51,11 +99,16 @@ const Contact = () => {
               className="p-2 bg-transparent border-2 rounded-md text-white focus:outline-none"
             ></textarea>
 
-            <button type="submit" className="text-white bg-gradient-to-b from-cyan-500 to-blue-500 px-6 py-3 my-8 mx-auto flex items-center rounded-md hover:scale-110 duration-300">
-              Send Message
+            <button type="submit" className={`text-white bg-gradient-to-b ${isSuccess ? 'from-green-400 to-green-600' : 'from-cyan-500 to-blue-500'} px-6 py-3 my-8 mx-auto flex items-center rounded-md hover:scale-110 duration-300`} disabled={isLoading}>
+              {isLoading ? "Sending..." : "Send Message"}
             </button>
           </form>
         </div>
+        {toastMsg && (
+          <div className="fixed bottom-0 left-0 right-0 p-4 text-center">
+            <span className={`${isSuccess ? 'text-green-500' : 'text-red-500'}`}>{toastMsg}</span>
+          </div>
+        )}
       </div>
     </div>
   );
