@@ -32,17 +32,12 @@ const Project = () => {
 
         {loading ? ( 
           <div className="flex justify-center items-center h-full">
+          <h3 className="mr-10 p-2">Loading projects, please wait...   </h3>
             <Oval
-              height={80}
-              width={80}
-              color="#4fa94d"
-              wrapperStyle={{}}
-              wrapperClass=""
-              visible={true}
-              ariaLabel='oval-loading'
-              secondaryColor="#4fa94d"
-              strokeWidth={2}
-              strokeWidthSecondary={2}
+              color="#00BFFF"
+              height={40}
+              width={40}
+              ariaLabel='loading'
             />
           </div>
         ) : (
