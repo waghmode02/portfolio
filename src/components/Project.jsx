@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { Oval } from 'react-loader-spinner'; 
 
 const Project = () => {
   const [projects, setProjects] = useState([]);
-
+  const [loading, setLoading] = useState(true); 
   useEffect(() => {
     fetch("https://portfolio-adminn.onrender.com/api/getproject")
       .then((response) => response.json())
       .then((data) => {
         setProjects(data);
+        setLoading(false); 
       })
       .catch((error) => {
         console.error("Error fetching projects:", error);
+        setLoading(false); 
       });
   }, []); 
 
@@ -27,32 +30,49 @@ const Project = () => {
           <p className="py-6">Here are a few projects I've worked on recently.</p>
         </div>
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8 px-12 sm:px-0">
-          {projects.map(({ id, imagePath, description, demoPath, githubPath }) => (
-            <div key={id} className="shadow-md shadow-gray-600 rounded-lg">
-              <img
-                src={imagePath}
-                alt="projects"
-                className="rounded-md duration-200 hover:scale-105 w-full h-auto p-2"
-              />
-              <p className="text-xl ml-1 p-2">{description}</p>
-              <div className="flex items-center justify-center">
-                <button
-                  className="w-1/2 px-6 py-3 m-4 duration-200 hover:scale-105"
-                  onClick={() => window.open(demoPath, "_blank")}
-                >
-                  Demo
-                </button>
-                <button
-                  className="w-1/2 px-6 py-3 m-4 duration-200 hover:scale-105"
-                  onClick={() => window.open(githubPath, "_blank")}
-                >
-                  GitHub
-                </button>
+        {loading ? ( 
+          <div className="flex justify-center items-center h-full">
+            <Oval
+              height={80}
+              width={80}
+              color="#4fa94d"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={true}
+              ariaLabel='oval-loading'
+              secondaryColor="#4fa94d"
+              strokeWidth={2}
+              strokeWidthSecondary={2}
+            />
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8 px-12 sm:px-0">
+            {projects.map(({ id, imagePath, description, demoPath, githubPath }) => (
+              <div key={id} className="shadow-md shadow-gray-600 rounded-lg">
+                <img
+                  src={imagePath}
+                  alt="projects"
+                  className="rounded-md duration-200 hover:scale-105 w-full h-auto p-2"
+                />
+                <p className="text-xl ml-1 p-2">{description}</p>
+                <div className="flex items-center justify-center">
+                  <button
+                    className="w-1/2 px-6 py-3 m-4 duration-200 hover:scale-105"
+                    onClick={() => window.open(demoPath, "_blank")}
+                  >
+                    Demo
+                  </button>
+                  <button
+                    className="w-1/2 px-6 py-3 m-4 duration-200 hover:scale-105"
+                    onClick={() => window.open(githubPath, "_blank")}
+                  >
+                    GitHub
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

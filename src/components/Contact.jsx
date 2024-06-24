@@ -5,23 +5,16 @@ const Contact = () => {
   const [toastMsg, setToastMsg] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
-  // Function to handle form submission
   function handleSubmit(e) {
-    e.preventDefault(); // Prevent default form submission behavior
-
-    // Set loading state to true
+    e.preventDefault(); 
     setIsLoading(true);
 
-    // Get form data
     const formData = new FormData(e.target);
 
-    // Convert form data to JSON
     const jsonData = {};
     formData.forEach((value, key) => {
       jsonData[key] = value;
     });
-
-    // Send form data to the API endpoint
     fetch("https://portfolio-adminn.onrender.com/api/addcontact", {
       method: "POST",
       headers: {
@@ -32,10 +25,9 @@ const Contact = () => {
       .then((response) => {
         if (response.ok) {
           console.log("Form submitted successfully");
-          // Show success toast message
+    
           setToastMsg("Message sent successfully!");
           setIsSuccess(true);
-          // Reset the form after successful submission
           setTimeout(() => {
             e.target.reset();
             setToastMsg("");
@@ -47,12 +39,10 @@ const Contact = () => {
       })
       .catch((error) => {
         console.error("Error submitting form:", error);
-        // Show error toast message
         setToastMsg("Failed to send message. Please try again.");
         setIsSuccess(false);
       })
       .finally(() => {
-        // Set loading state to false after submission
         setIsLoading(false);
       });
   }
